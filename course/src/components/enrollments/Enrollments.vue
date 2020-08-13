@@ -249,18 +249,27 @@ export default {
     },
     //检查某课程是否已被该学生注册
     checkReg(id) {
+      //通过遍历定位学生,输出index
+      let index=''
+      let studentFound=false
       for (let i = 0; i < this.students.length - 1; i++) {
         if (this.students[i].studentId == this.currentStudentId) {
-          //定位该学生
-          if (this.students[i].regId.search(id) != -1) {
-            //查询该学生的regId中是否已存在该courseId
-            return false; //存在,返回false
-          } else {
-            return true; //不存在,返回true
-          }
-        } else {
-          return true;
+          index = i
+          studentFound=true
         }
+      }
+
+      if(studentFound==false){
+        console.log('未找到学生')
+        return true
+      }
+
+      if(this.students[index].regId.search(id) != -1) {
+        //找到有重复的
+        return false
+      }else{
+        //未找到有重复的
+        return true
       }
     },
     print() {
@@ -269,6 +278,7 @@ export default {
         this.currentStudentName,
         this.currentStudentPassword
       );
+      this.checkReg(123456)
     },
     register(id, name) {
       if (this.currentStudentId == "") {
@@ -280,7 +290,7 @@ export default {
 
             let [regId, regCourse] = [id, name];
 
-            if (this.students[i].regId != undefined) {
+            if (this.students[i].regId != 'None') {
               //如果该学生已经注册过任意课程了
               regId = id + " " + this.students[i].regId;
               regCourse = name + " " + this.students[i].regCourse;

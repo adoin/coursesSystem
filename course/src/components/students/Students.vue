@@ -32,8 +32,7 @@
 
             <el-table-column label="操作" width="180">
                 <template slot-scope="scope">
-                    <!-- 获取当前行的id,name,index -->
-                    <el-button type="text" size="small" @click="changePassword(scope.row.studentId, scope.row.studentName, scope.$index, students)" >修改密码</el-button>
+                    <el-button type="text" size="small" @click="changePassword(scope.$index)" >修改密码</el-button>
                 </template>
             </el-table-column>  
         </el-table>
@@ -59,8 +58,8 @@ export default {
             this.students.push({studentId: randomStudentId, 
                                 studentName: this.name, 
                                 studentPassword: randomStudentPassword,
-                                regCourse:'',
-                                regId:''})
+                                regCourse:'none',
+                                regId:'none'})
             console.log(this.students)
             if(true){
                 alert("学生:"+this.name+"\n分配学号:"+randomStudentId+"\n初始密码:"+randomStudentPassword+"\n注册成功")
@@ -123,17 +122,21 @@ export default {
             let randomStudentPassword=this.randomInitPassword('seed3',6)
                 this.students.push({studentId: randomStudentId, 
                     studentName: randomName, 
-                    studentPassword: randomStudentPassword })
+                    studentPassword: randomStudentPassword,
+                    regCourse:'None',
+                    regId:'None'})
             }
         },
         //弹出消息框,修改密码
-        changePassword(id,name,index,rows){
+        changePassword(index){
             this.$prompt('请输入新的密码','提示',{
                 confirmButtonText: '确定',
                 cancelButtonText: '取消',
             }).then(({ value }) => {
-                    console.log(id,name,index,rows)
-                    rows.splice(index,1,{studentId:id,studentName:name,studentPassword:value})
+                    console.log(index)
+                    let [id,name,regCourse,regId] = [this.students[index].studentId, this.students[index].studentName, 
+                    this.students[index].regCourse, this.students[index].regId]
+                    this.students.splice(index,1,{studentId:id,studentName:name,studentPassword:value,regCourse:regCourse,regId:regId})
                     this.$message({
                         type:'success',
                         message:'修改成功,新密码是：' + value
