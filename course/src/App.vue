@@ -2,13 +2,14 @@
 <template>
   <div id="app">
     <!-- 引入topbar -->
-    <topbar></topbar>
+    <login></login>
     <router-view></router-view>
   </div>
 </template>
 
 <script>
 import topbar from "./components/Topbar.vue"
+import login from "./components/login/login.vue"
 
 
 export default {
@@ -25,7 +26,7 @@ export default {
 
   },
   components:{
-    topbar
+    login
   }
 };
 </script>

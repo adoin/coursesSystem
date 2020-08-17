@@ -7,7 +7,19 @@ Vue.use(Vuex)
 export default new Vuex.Store({
     state:{
         count:0,
-        students: [],
+        loginStatus:false,
+        adminType:false,
+        studentType:false,
+        currentStudentId:'',
+        currentStudentName:'',
+        currentStudentPassword:'',
+        currentRegId:'',
+        currentRegCourse:'',
+        students: [{studentId:'123456',
+        studentName:'张三',
+        studentPassword:'1',
+        regCourse:'',
+        regId:''}],
         courses: [],
         globalOptions:[{
             value: '选项1',

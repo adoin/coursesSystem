@@ -1,5 +1,8 @@
 <template>
-  <div>
+<div>
+
+<!--
+  <div v-show="this.$store.state.loginStatus">
     <el-menu
       :default-active="$route.path"
       class="el-menu-demo"
@@ -25,26 +28,57 @@
       </el-menu-item>
     </el-menu>
 
-<!-- 未启用的侧栏
+-->
+
     <el-row class="tac">
       <el-col :span="12">
         <el-menu default-active="2" class="el-menu-vertical-demo" router>
-          <el-menu-item index="/courses">
-            <i class="el-icon-menu"></i>
+
+          <!--管理员-->
+          <el-menu-item index="/courses" v-show="this.$store.state.adminType">
+            <i class="el-icon-s-order"></i>
             <span slot="title">课程管理</span>
           </el-menu-item>
-          <el-menu-item index="/students">
-            <i class="el-icon-document"></i>
+          <el-menu-item index="/students" v-show="this.$store.state.adminType">
+            <i class="el-icon-s-custom"></i>
             <span slot="title">学生管理</span>
           </el-menu-item>
-          <el-menu-item index="/enrollments">
-            <i class="el-icon-setting"></i>
-            <span slot="title">我要选课</span>
+          <el-menu-item index="/enrollments" v-show="this.$store.state.adminType">
+            <i class="el-icon-s-platform"></i>
+            <span slot="title">账号管理</span>
           </el-menu-item>
+          <el-menu-item @click="logOut('admin')" v-show="this.$store.state.adminType">
+            <i class="el-icon-switch-button"></i>
+            <span slot="title">退出系统</span>
+          </el-menu-item>
+
+
+<!--学生-->
+          <el-menu-item index="/enrollments" v-show="this.$store.state.studentType">
+            <i class="el-icon-s-order"></i>
+            <span slot="title">所有课程</span>
+          </el-menu-item>
+
+          <el-menu-item index="/selected" v-show="this.$store.state.studentType">
+            <i class="el-icon-s-claim"></i>
+            <span slot="title">已选课程</span>
+          </el-menu-item>
+
+          <el-menu-item index="/passwordManager" v-show="this.$store.state.studentType">
+            <i class="el-icon-key"></i>
+            <span slot="title">修改密码</span>
+          </el-menu-item>
+
+          <el-menu-item @click="logOut('student')" v-show="this.$store.state.studentType">
+            <i class="el-icon-switch-button"></i>
+            <span slot="title">退出系统</span>
+          </el-menu-item>
+          
+
         </el-menu>
       </el-col>
     </el-row>
--->
+
   </div>
 </template>
 
@@ -53,6 +87,18 @@ export default {
   methods: {
     handleSelect(key, keyPath) {
       console.log(key, keyPath);
+    },
+    logOut(e){
+      switch(e){
+        case 'admin':
+          this.$store.state.loginStatus = false;
+          this.$store.state.adminType = false;
+          break;
+        case 'student':
+          this.$store.state.loginStatus = false;
+          this.$store.state.studentType = false;
+          break;
+      }
     }
   }
 };
