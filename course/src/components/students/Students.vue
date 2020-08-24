@@ -289,7 +289,8 @@ export default {
           studentName: randomName,
           studentPassword: randomStudentPassword,
           regCourse: "None",
-          regId: "None"
+          regId: "None",
+          studentScore:[]
         });
       }
     },
@@ -301,18 +302,20 @@ export default {
       })
         .then(({ value }) => {
           console.log(index);
-          let [id, name, regCourse, regId] = [
+          let [id, name, regCourse, regId, score] = [
             this.students[index].studentId,
             this.students[index].studentName,
             this.students[index].regCourse,
-            this.students[index].regId
+            this.students[index].regId,
+            this.students[index].studentScore
           ];
           this.students.splice(index, 1, {
             studentId: id,
             studentName: name,
             studentPassword: value,
             regCourse: regCourse,
-            regId: regId
+            regId: regId,
+            studentScore:score
           });
           this.$message({
             type: "success",

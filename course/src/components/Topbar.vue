@@ -43,10 +43,15 @@
             <i class="el-icon-s-custom"></i>
             <span slot="title">学生管理</span>
           </el-menu-item>
+           <el-menu-item index="/results" v-show="this.$store.state.adminType">
+            <i class="el-icon-s-platform"></i>
+            <span slot="title">成绩管理</span>
+          </el-menu-item>
           <el-menu-item index="/enrollments" v-show="this.$store.state.adminType">
             <i class="el-icon-s-platform"></i>
             <span slot="title">账号管理</span>
           </el-menu-item>
+
           <el-menu-item @click="logOut('admin')" v-show="this.$store.state.adminType">
             <i class="el-icon-switch-button"></i>
             <span slot="title">退出系统</span>

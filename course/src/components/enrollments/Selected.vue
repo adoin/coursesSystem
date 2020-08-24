@@ -44,6 +44,12 @@
           </template>
         </vxe-table-column>
 
+        <vxe-table-column field="courseResult" title="我的成绩" sortable>
+          <template slot-scope="scope">
+            <span>{{ scope.row.courseResult }}</span>
+          </template>
+        </vxe-table-column>
+
         <vxe-table-column title="操作">
           <template slot-scope="scope">
             <el-button type="text" size="small">详细信息</el-button>

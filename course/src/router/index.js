@@ -5,7 +5,7 @@ import Courses from "@/components/courses/Courses"
 import Enrollments from "@/components/enrollments/Enrollments"
 import Selected from "@/components/enrollments/selected"
 import PasswordManager from "@/components/enrollments/PasswordManager"
-
+import Results from "@/components/results/Results"
 Vue.use(Router)
 
 export default new Router({
@@ -34,6 +34,11 @@ export default new Router({
       path:"/passwordManager",
       name:"passwordManager",
       component:PasswordManager
+    },
+    {
+      path:"/results",
+      name:"results",
+      component:Results
     }
   ]
 })

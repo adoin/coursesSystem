@@ -21,6 +21,8 @@ export default new Vuex.Store({
         regCourse:'',
         regId:''}],
         courses: [],
+        results:[],
+        resultList:[],
         globalOptions:[{
             value: '选项1',
             label: '课程1'

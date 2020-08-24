@@ -152,6 +152,20 @@
               </template>
             </el-table-column>
 
+            <el-table-column prop="courseScore" label="课程学分" width="180">
+              <template scope="scope">
+                <!-- 编辑时显示该input -->
+                <el-input
+                  size="small"
+                  v-model="scope.row.courseScore"
+                  v-show="editStatus"
+                ></el-input>
+                <!-- 未编辑时显示该span -->
+                <span v-show="!editStatus">{{ scope.row.courseScore }}</span>
+              </template>
+            </el-table-column>
+
+
             <el-table-column label="操作" width="180">
               <template scope="scope">
                 <!-- 未编辑时显示该button -->
@@ -204,6 +218,7 @@ export default {
       name: "",
       institution: "",
       lecturer: "",
+      score:'',
       tempCourses: [],
       editStatus: false,
       multipleSelection: [],
@@ -217,7 +232,8 @@ export default {
         courseId: this.id,
         courseName: this.name,
         courseInstitution: this.institution,
-        courseLecturer: this.lecturer
+        courseLecturer: this.lecturer,
+        courseScore:this.score
       });
       alert("提交成功");
     },
@@ -227,7 +243,8 @@ export default {
         courseId: "",
         courseName: "",
         courseInstitution: "",
-        courseLecturer: ""
+        courseLecturer: "",
+        courseScore:''
       });
     },
     //将现有的数组数据存储到当前组件本地的一个临时数组里面
@@ -236,11 +253,13 @@ export default {
       let name = this.courses[index].courseName;
       let institution = this.courses[index].courseInstitution;
       let lecturer = this.courses[index].courseLecturer;
+      let score=this.courses[index].courseScore;
       this.tempCourses.splice(index, 1, {
         courseId: id,
         courseName: name,
         courseInstitution: institution,
-        courseLecturer: lecturer
+        courseLecturer: lecturer,
+        courseScore:score
       });
       this.changeEditStatus();
     },
@@ -319,12 +338,16 @@ export default {
           continue;
         }
 
+        //设置一个随机学分 
+        let randomScore=Math.round(Math.random()*4+1)
+
         //push数组
         this.courses.push({
           courseId: randomId,
           courseName: randomCourseName,
           courseInstitution: randomInstitution,
-          courseLecturer: randomLecturer
+          courseLecturer: randomLecturer,
+          courseScore:randomScore
         });
       }
     }

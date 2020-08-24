@@ -77,6 +77,17 @@
               </template>
             </vxe-table-column>
 
+            <vxe-table-column field="courseScore" title="课程学分" sortable>
+              <template slot-scope="scope">
+                <span
+                  v-if="checkCourseScore() && searchItem != ''"
+                  style="color:red"
+                  >{{ scope.row.courseScore }}</span
+                >
+                <span v-else>{{ scope.row.courseScore }}</span>
+              </template>
+            </vxe-table-column>
+
             <vxe-table-column title="操作">
               <template slot-scope="scope">
                 <el-button type="text" size="small">详细信息</el-button>
@@ -151,6 +162,9 @@ export default {
           if (item.courseLecturer.indexOf(this.searchItem) != -1) {
             this.queryList.push(item);
           }
+          if(item.courseScore.toFixed(0).indexOf(this.searchItem)!=-1){
+            this.queryList.push(item);
+          }
         });
       } else if (this.searchItem == "") {
         this.queryList = this.courses;
@@ -186,6 +200,15 @@ export default {
     checkCourseLecturer() {
       for (let item of this.queryList) {
         if (item.courseLecturer.indexOf(this.searchItem) != -1) {
+          return true;
+        } else {
+          return false;
+        }
+      }
+    },
+    checkCourseScore() {
+      for (let item of this.queryList) {
+        if (item.courseScore.toFixed(0).indexOf(this.searchItem) != -1) {
           return true;
         } else {
           return false;
@@ -243,6 +266,16 @@ export default {
               regCourse: regCourse
             });
             console.log("注册成功");
+
+            this.resultList.push({
+                primaryKey:this.students[i].studentId + id,
+                studentId: this.students[i].studentId,
+                studentName: this.students[i].studentName,
+                courseId: id,
+                courseName: name,
+                courseResult:''
+            })
+
             break;
           }
         }
@@ -271,6 +304,7 @@ export default {
   computed: {
     ...mapState(["students"]),
     ...mapState(["courses"]),
+    ...mapState(["resultList"]),
   },
   components: {
     topbar
