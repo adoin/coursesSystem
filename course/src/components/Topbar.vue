@@ -74,6 +74,11 @@
             <span slot="title">修改密码</span>
           </el-menu-item>
 
+          <el-menu-item index="/scoreList" v-show="this.$store.state.studentType">
+            <i class="el-icon-key"></i>
+            <span slot="title">学分汇总</span>
+          </el-menu-item>
+
           <el-menu-item @click="logOut('student')" v-show="this.$store.state.studentType">
             <i class="el-icon-switch-button"></i>
             <span slot="title">退出系统</span>

@@ -17,6 +17,7 @@
                 placeholder="搜索"
                 @input="queryItem()"
               ></vxe-input>
+              <vxe-button @click="regCompulsion">注册必修课程</vxe-button>
             </template>
           </vxe-toolbar>
 
@@ -88,6 +89,9 @@
               </template>
             </vxe-table-column>
 
+             <vxe-table-column field="courseType" title="课程类型" sortable>
+            </vxe-table-column>
+
             <vxe-table-column title="操作">
               <template slot-scope="scope">
                 <el-button type="text" size="small">详细信息</el-button>
@@ -140,6 +144,32 @@ export default {
     
     showSelected(){
       this.showSelected==true;
+    },
+
+
+    regCompulsion(){
+        //取得当前登录学生的专业,已注册课程
+        let currentStudentInstitution=''
+        let currentStudentRegId=''
+
+        for(let item of this.students){
+          if(this.$store.state.currentStudentId==item.studentId){
+            console.log(item)
+            currentStudentInstitution=item.regInstitution
+            currentStudentRegId=item.regId
+          }
+        }
+
+        //遍历已有课程,查询学生对应专业的所有必修课程
+        for(let item of this.courses){
+          if(item.courseInstitution==currentStudentInstitution){
+            if(item.courseType=='必修'){
+              console.log(item.courseName)
+              this.register(item.courseId,item.courseName)
+            }
+          }
+        }
+        
     },
 
     queryItem() {
@@ -251,12 +281,15 @@ export default {
 
             let [regId, regCourse] = [id, name];
 
-            if (this.students[i].regId != "None") {
+            if (this.students[i].regId != undefined) {
               //如果该学生已经注册过任意课程了
+              console.log(1)
               regId = id + " " + this.students[i].regId;
               regCourse = name + " " + this.students[i].regCourse;
             }
 
+
+            console.log(2)
             this.students.splice(i, 1, {
               //改变该学生对应的数组内存储的对象
               studentId: this.students[i].studentId,
@@ -265,6 +298,7 @@ export default {
               regId: regId,
               regCourse: regCourse
             });
+            console.log(this.students[i])
             console.log("注册成功");
 
             this.resultList.push({

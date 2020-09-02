@@ -1,6 +1,23 @@
 <template>
-  <div>
-    <div v-show="!this.$store.state.loginStatus">
+<el-container>
+    <el-header>
+    <div v-show="this.$store.state.loginStatus">
+      <div class="header" v-show="this.$store.state.adminType">
+        课程信息系统(管理员)
+      </div>
+      <div class="header" v-show="this.$store.state.studentType">
+        课程信息系统(学生)
+      </div>
+    </div>
+    <div v-show="!this.$store.state.loginStatus" class="header">课程信息系统</div>
+    </el-header>
+
+    <el-main>
+      <div height:100px></div>
+    </el-main>
+
+
+<div v-show="!this.$store.state.loginStatus">
       <el-form label-width="100px" class="form">
         <el-form-item label="账号">
           <el-input
@@ -31,17 +48,9 @@
         </el-form-item>
       </el-form>
     </div>
-    <div>tips: 账号admin, 密码任意</div>
-    <div class="user" v-show="this.$store.state.loginStatus">
-      <div class="header" v-show="this.$store.state.adminType">
-        课程信息系统(管理员)
-      </div>
-      <div class="header" v-show="this.$store.state.studentType">
-        课程信息系统(学生)
-      </div>
-      <el-button @click="logOut">注销当前用户</el-button>
-    </div>
-  </div>
+
+
+  </el-container>
 </template>
 
 <script>
@@ -112,7 +121,11 @@ export default {
 
 <style scoped>
 .form {
-  margin-top: 50px;
+  position: relative;
+	margin-bottom: 30px;
+	margin-top: 30px;
+	margin-right: auto;
+	margin-left: auto;
 }
 .formInput {
   float: left;
@@ -121,4 +134,20 @@ export default {
 .formButton {
   float: left;
 }
+
+
+.header {
+	color:black;
+	font-size: 26px;
+  width: 300px;
+  height: 100px;
+}
+
+  .el-header {
+    background-color: #B3C0D1;
+    color: #333;
+    line-height: 60px;
+  }
+ 
+
 </style>

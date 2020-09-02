@@ -6,6 +6,7 @@ import Enrollments from "@/components/enrollments/Enrollments"
 import Selected from "@/components/enrollments/selected"
 import PasswordManager from "@/components/enrollments/PasswordManager"
 import Results from "@/components/results/Results"
+import ScoreList from "@/components/scoreList/ScoreList"
 Vue.use(Router)
 
 export default new Router({
@@ -39,6 +40,11 @@ export default new Router({
       path:"/results",
       name:"results",
       component:Results
+    },
+    {
+      path:"/scoreList",
+      name:"scoreList",
+      component:ScoreList
     }
   ]
 })

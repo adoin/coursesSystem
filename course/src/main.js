@@ -8,11 +8,10 @@ import 'element-ui/lib/theme-chalk/index.css'
 import less from 'less'
 import router from './router'
 import store from './store'
-import 'xe-utils'
+import XEUtils from 'xe-utils'
+import VXEUtils from 'vxe-utils'
 import VXETable from 'vxe-table'
 import 'vxe-table/lib/index.css'
-
-
 
 
 Vue.use(ElementUI)
@@ -20,8 +19,10 @@ Vue.use(less)
 Vue.use(Vuex)
 Vue.use(VXETable)
 
+
 Vue.config.productionTip = false
 
+window.XEUtils = XEUtils
 /* eslint-disable no-new */
 new Vue({
   el: '#app',

@@ -5,6 +5,7 @@
         <topbar></topbar>
       </el-aside>
       <el-main>
+        <!--
         <el-form label-width="100px" class="form" v-show="customReg">
           <el-form-item label="学生姓名">
             <el-input
@@ -31,20 +32,133 @@
             >
           </el-form-item>
         </el-form>
+        -->
 
-        <el-button
-          @click="randomInitData(5)"
-          class="toolBarButton"
-          icon="el-icon-question"
-          >新增随机学生</el-button
-        >
-        <el-button
-          @click="CustomRegister()"
-          class="toolBarButton"
-          icon="el-icon-info"
-          >新增自定义学生</el-button
-        >
+        <vxe-toolbar>
+          <template v-slot:buttons>
+            <vxe-button icon="el-icon-plus" @click="randomInitData(5)"
+              >新增随机学生</vxe-button
+            >
+            <vxe-button icon="el-icon-plus" @click="createEvent()"
+              >新增自定义学生</vxe-button
+            >
+            <vxe-button icon="el-icon-delete" @click="remove" status="danger"
+              >移除选中学生</vxe-button
+            >
+          </template>
+        </vxe-toolbar>
 
+        <vxe-table
+          border
+          resizable
+          show-overflow
+          keep-source
+          ref="xTable"
+          :loading="loading"
+          :data="students"
+          :edit-config="{ trigger: 'manual', mode: 'row' }"
+        >
+          <vxe-table-column type="seq" width="60"></vxe-table-column>
+          <vxe-table-column type="checkbox" width="60"></vxe-table-column>
+
+          <vxe-table-column
+            field="studentId"
+            title="学号"
+            :edit-render="{
+              name: 'input',
+              immediate: true,
+              attrs: { type: 'text' }
+            }"
+            width="130"
+            sortable
+          ></vxe-table-column>
+
+          <vxe-table-column
+            field="studentName"
+            title="姓名"
+            width="300"
+            sortable
+            :edit-render="{
+              name: 'input',
+              immediate: true,
+              attrs: { type: 'text' }
+            }"
+          ></vxe-table-column>
+
+          <vxe-table-column
+            field="studentPassword"
+            title="登录密码"
+            :edit-render="{
+              name: 'input',
+              immediate: true,
+              attrs: { type: 'text' }
+            }"
+            width="130"
+            sortable
+          ></vxe-table-column>
+
+          <vxe-table-column
+            field="regInstitution"
+            title="所属学院"
+            :edit-render="{
+              name: 'input',
+              immediate: true,
+              attrs: { type: 'text' }
+            }"
+            width="130"
+            sortable
+          ></vxe-table-column>
+
+          <vxe-table-column
+            field="regCourse"
+            title="已注册课程"
+            :edit-render="{
+              name: 'input',
+              immediate: true,
+              attrs: { type: 'text' }
+            }"
+            width="130"
+            sortable
+          ></vxe-table-column>
+
+          <vxe-table-column title="操作">
+            <template v-slot="{ row }">
+              <template v-if="$refs.xTable.isActiveByRow(row)">
+                <vxe-button icon="el-icon-check" @click="saveRowEvent(row)"
+                  >保存</vxe-button
+                >
+                <vxe-button icon="el-icon-close" @click="cancelRowEvent(row)"
+                  >取消</vxe-button
+                >
+              </template>
+              <template v-else>
+                <vxe-button icon="el-icon-edit" @click="editRowEvent(row)"
+                  >编辑</vxe-button
+                >
+              </template>
+            </template>
+          </vxe-table-column>
+        </vxe-table>
+
+        <vxe-modal
+          v-model="showCustom"
+          :title="'创建自定义学生'"
+          width="800"
+          resize
+          destroy-on-close
+        >
+          <template v-slot>
+            <vxe-form
+              :data="formData"
+              :items="formItems"
+              title-align="right"
+              title-width="100"
+              @submit="customStudentSubmitEvent"
+            ></vxe-form>
+          </template>
+        </vxe-modal>
+
+        <!--
         <el-table :data="students" border style="width: 100%">
           <el-table-column prop="studentId" label="学号" width="180">
           </el-table-column>
@@ -69,6 +183,7 @@
             </template>
           </el-table-column>
         </el-table>
+-->
       </el-main>
     </el-container>
   </div>
@@ -82,10 +197,167 @@ export default {
   data() {
     return {
       name: "",
-      customReg: false
+      customReg: false,
+      loading: false,
+      submitLoading: false,
+      selectRow: null,
+      showCustom: false, //控制modal框的显示
+
+      formData: {
+        studentId: null,
+        studentName: null,
+        studentPassword: null,
+        regInstitution: null
+      },
+
+      formItems: [
+        {
+          title: "填入学生信息",
+          span: 24,
+          titleAlign: "left",
+          titleWidth: 200,
+          titlePrefix: { icon: "fa fa-address-card-o" }
+        },
+        {
+          field: "studentId",
+          title: "学生学号",
+          span: 12,
+          itemRender: {
+            name: "$input",
+            props: { placeholder: "请输入学生学号" }
+          }
+        },
+        {
+          field: "studentName",
+          title: "学生姓名",
+          span: 12,
+          itemRender: {
+            name: "$input",
+            props: { placeholder: "请输入学生姓名" }
+          }
+        },
+        {
+          field: "studentPassword",
+          title: "登录密码",
+          span: 12,
+          itemRender: {
+            name: "$input",
+            props: { placeholder: "请输入登录密码" }
+          }
+        },
+        {
+          field: "regInstitution",
+          title: "所属学院",
+          span: 12,
+          itemRender: {
+            name: "$input",
+            props: { placeholder: "请输入所属学院" }
+          }
+        },
+        {
+          align: "center",
+          span: 24,
+          titleAlign: "left",
+          itemRender: {
+            name: "$buttons",
+            children: [
+              {
+                props: {
+                  type: "submit",
+                  content: "提交",
+                  status: "primary"
+                }
+              },
+              {
+                props: {
+                  type: "reset",
+                  content: "重置"
+                }
+              }
+            ]
+          }
+        }
+      ]
     };
   },
+
   methods: {
+    editRowEvent(row) {
+      this.$refs.xTable.setActiveRow(row);
+    },
+
+    saveRowEvent(row) {
+      this.$refs.xTable.clearActived().then(() => {
+        this.loading = true;
+        setTimeout(() => {
+          this.loading = false;
+          this.$XModal.message({ message: "保存成功！", status: "success" });
+        }, 300);
+      });
+    },
+
+    cancelRowEvent(row) {
+      const xTable = this.$refs.xTable;
+      xTable.clearActived().then(() => {
+        // 还原行数据
+        xTable.revertData(row);
+      });
+    },
+
+    createEvent() {
+      this.formData = {
+        studentId: "",
+        studentName: "",
+        studentPassword: "",
+        regInstitution: ""
+      };
+      this.selectRow = null;
+      this.showCustom = true;
+    },
+
+    remove() {
+      this.$confirm("此操作将永久删除选中的学生信息, 是否继续?", "警告", {
+        confirmButtonText: "确定",
+        cancelButtonText: "取消",
+        type: "warning"
+      })
+        .then(() => {
+          let selectRecords = this.$refs.xTable.getCheckboxRecords();
+          for (let item1 of selectRecords) {
+            for (let item2 of this.students) {
+              if (item2 == item1) {
+                this.students.splice(this.students.indexOf(item2), 1);
+              }
+            }
+          }
+
+          this.$message({
+            type: "success",
+            message: "删除成功"
+          });
+        })
+        .catch(() => {
+          this.$message({
+            type: "info",
+            message: "取消删除"
+          });
+        });
+    },
+
+    //modal框 提交自定义学生注册
+    customStudentSubmitEvent() {
+      console.log(this.formData);
+      this.students.push({
+        studentId: this.formData.studentId,
+        studentName: this.formData.studentName,
+        studentPassword: this.formData.studentPassword,
+        regInstitution: this.formData.regInstitution
+      });
+      console.log(this.students);
+      this.$XModal.message({ message: "创建成功", status: "success" });
+      this.showCustom = false;
+    },
+
     //提交注册
     submit() {
       let randomStudentId = this.randomInitStudentId("seed");
@@ -94,8 +366,8 @@ export default {
         studentId: randomStudentId,
         studentName: this.name,
         studentPassword: randomStudentPassword,
-        regCourse: "none",
-        regId: "none"
+        regCourse: "",
+        regId: ""
       });
       console.log(this.students);
       if (true) {
@@ -288,9 +560,13 @@ export default {
           studentId: randomStudentId,
           studentName: randomName,
           studentPassword: randomStudentPassword,
-          regCourse: "None",
-          regId: "None",
-          studentScore:[]
+          regCourse: "",
+          regId: "",
+          regInstitution:
+            this.$store.state.allcourseInstitution[
+              Math.round(Math.random() * 12)
+            ] + "院",
+          studentScore: []
         });
       }
     },
@@ -302,11 +578,12 @@ export default {
       })
         .then(({ value }) => {
           console.log(index);
-          let [id, name, regCourse, regId, score] = [
+          let [id, name, regCourse, regId, regInstitution, score] = [
             this.students[index].studentId,
             this.students[index].studentName,
             this.students[index].regCourse,
             this.students[index].regId,
+            this.students[index].regInstitution,
             this.students[index].studentScore
           ];
           this.students.splice(index, 1, {
@@ -315,7 +592,8 @@ export default {
             studentPassword: value,
             regCourse: regCourse,
             regId: regId,
-            studentScore:score
+            regInstitution: regInstitution,
+            studentScore: score
           });
           this.$message({
             type: "success",

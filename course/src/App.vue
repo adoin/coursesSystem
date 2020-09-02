@@ -1,7 +1,6 @@
 
 <template>
   <div id="app">
-    <!-- 引入topbar -->
     <login></login>
     <router-view></router-view>
   </div>
