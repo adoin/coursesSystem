@@ -7,23 +7,12 @@
 
       <el-main>
         <vxe-toolbar>
-
-
-
           <template v-slot:buttons>
             <vxe-input v-model="filterName" type="search" placeholder="试试全表搜索"></vxe-input>
-            <vxe-button icon="el-icon-plus" @click="add"
-              >新增空白课程</vxe-button
-            >
-            <vxe-button icon="el-icon-plus" @click="randomCourseEvent"
-              >新增随机课程</vxe-button
-            >
-            <vxe-button icon="el-icon-plus" @click="insertEvent"
-              >新增自定义课程</vxe-button
-            >
-            <vxe-button icon="el-icon-delete" @click="remove" status="danger"
-              >移除选择课程</vxe-button
-            >
+            <vxe-button icon="el-icon-plus" @click="add">新增空白课程</vxe-button>
+            <vxe-button icon="el-icon-plus" @click="randomCourseEvent">新增随机课程</vxe-button>
+            <vxe-button icon="el-icon-plus" @click="insertEvent">新增自定义课程</vxe-button>
+            <vxe-button icon="el-icon-delete" @click="remove" status="danger">移除选择课程</vxe-button>
           </template>
         </vxe-toolbar>
 
@@ -35,8 +24,7 @@
           ref="xTable"
           :loading="loading"
           :data="list"
-          :edit-config="{ trigger: 'manual', mode: 'row' }"
-          @cell-click="cellClickEvent"
+          :edit-config="{trigger: 'manual', mode: 'row'}"
         >
           <vxe-table-column type="seq" width="60"></vxe-table-column>
           <vxe-table-column type="checkbox" width="60"></vxe-table-column>
@@ -50,7 +38,7 @@
             }"
             width="130"
             sortable
-            type='html'
+            type="html"
           ></vxe-table-column>
 
           <vxe-table-column
@@ -63,7 +51,7 @@
               immediate: true,
               attrs: { type: 'text' }
             }"
-            type='html'
+            type="html"
             :filter-multiple="true"
             :filters="courseNameFilter"
             :filter-method="filtercourseNameMethod"
@@ -79,7 +67,7 @@
             }"
             width="130"
             sortable
-            type='html'
+            type="html"
             :filter-multiple="true"
             :filters="courseInstitutionFilter"
             :filter-method="filtercourseInstitutionMethod"
@@ -94,7 +82,7 @@
             }"
             width="130"
             sortable
-            type='html'
+            type="html"
           ></vxe-table-column>
           <vxe-table-column
             field="courseType"
@@ -106,7 +94,7 @@
             }"
             width="130"
             sortable
-            type='html'
+            type="html"
           ></vxe-table-column>
 
           <vxe-table-column
@@ -114,7 +102,7 @@
             title="课程学分"
             width="140"
             sortable
-            type='html'
+            type="html"
             :edit-render="{
               name: 'input',
               immediate: true,
@@ -137,20 +125,8 @@
 
           <vxe-table-column title="操作">
             <template v-slot="{ row }">
-                <vxe-button icon="el-icon-check" @click="viewDetails()">详细信息</vxe-button>
-              <template v-if="$refs.xTable.isActiveByRow(row)">
-                <vxe-button icon="el-icon-check" @click="saveRowEvent(row)"
-                  >保存</vxe-button
-                >
-                <vxe-button icon="el-icon-close" @click="cancelRowEvent(row)"
-                  >取消</vxe-button
-                >
-              </template>
-              <template v-else>
-                <vxe-button icon="el-icon-edit" @click="editRowEvent(row)"
-                  >编辑</vxe-button
-                >
-              </template>
+              <vxe-button icon="el-icon-check" @click="viewDetails(row)">详细信息</vxe-button>
+              <vxe-button icon="el-icon-edit" @click="editEvent(row)">编辑</vxe-button>
             </template>
           </vxe-table-column>
 
@@ -159,13 +135,12 @@
               <p>没有更多数据了！</p>
             </span>
           </template>
-
         </vxe-table>
 
-<!-- 新增空白课程 -->
+        <!-- 新增空白课程 -->
         <vxe-modal
           v-model="showEdit"
-          :title="'新增&保存'"
+          :title="selectRow ? '编辑&保存' : '新增&保存'"
           width="800"
           :loading="submitLoading"
           resize
@@ -182,14 +157,8 @@
           </template>
         </vxe-modal>
 
-<!-- 新增随机课程 -->
-        <vxe-modal
-          v-model="showRandom"
-          :title="'创建随机课程'"
-          width="800"
-          resize
-          destroy-on-close
-        >
+        <!-- 新增随机课程 -->
+        <vxe-modal v-model="showRandom" :title="'创建随机课程'" width="800" resize destroy-on-close>
           <template v-slot>
             <vxe-form
               :data="formData_random"
@@ -201,9 +170,17 @@
           </template>
         </vxe-modal>
 
-<!-- 查看课程详细信息 -->
+        <!-- 查看课程详细信息 -->
 
-          <vxe-modal v-model="showDetails" title="查看详情" width="600" height="400" :mask="false" :lock-view="false" resize>
+        <vxe-modal
+          v-model="showDetails"
+          title="查看详情"
+          width="600"
+          height="400"
+          :mask="false"
+          :lock-view="false"
+          resize
+        >
           <template v-slot>
             <vxe-table
               border="inner"
@@ -213,14 +190,13 @@
               height="auto"
               :show-header="false"
               :sync-resize="showDetails"
-              :data="detailData">
+              :data="detailData"
+            >
               <vxe-table-column field="label" width="40%"></vxe-table-column>
               <vxe-table-column field="value"></vxe-table-column>
             </vxe-table>
           </template>
         </vxe-modal>
-
-
 
         <div class="bottom"></div>
       </el-main>
@@ -246,11 +222,11 @@ export default {
       type: "",
       selectRow: null,
       showEdit: false,
-      showDetails:false,
+      showDetails: false,
 
       showRandom: false,
-      filterName:'',
-      detailData:[],
+      filterName: "",
+      detailData: [],
 
       formData: {
         courseId: null,
@@ -258,7 +234,11 @@ export default {
         courseInstitution: null,
         courseLecturer: null,
         courseType: null,
-        courseScore: null
+        courseScore: null,
+        courseSize: null,
+        courseVolume: null,
+        courseArea: null,
+        courseTime: null,
       },
 
       formItems: [
@@ -267,7 +247,7 @@ export default {
           span: 24,
           titleAlign: "left",
           titleWidth: 200,
-          titlePrefix: { icon: "fa fa-address-card-o" }
+          titlePrefix: { icon: "fa fa-address-card-o" },
         },
         {
           field: "courseId",
@@ -275,8 +255,8 @@ export default {
           span: 12,
           itemRender: {
             name: "$input",
-            props: { placeholder: "请输入课程编号" }
-          }
+            props: { placeholder: "请输入课程编号" },
+          },
         },
         {
           field: "courseName",
@@ -284,8 +264,8 @@ export default {
           span: 12,
           itemRender: {
             name: "$input",
-            props: { placeholder: "请输入课程名称" }
-          }
+            props: { placeholder: "请输入课程名称" },
+          },
         },
         {
           field: "courseInstitution",
@@ -293,8 +273,8 @@ export default {
           span: 12,
           itemRender: {
             name: "$input",
-            props: { placeholder: "请输入教学学院" }
-          }
+            props: { placeholder: "请输入教学学院" },
+          },
         },
         {
           field: "courseLecturer",
@@ -302,8 +282,8 @@ export default {
           span: 12,
           itemRender: {
             name: "$input",
-            props: { placeholder: "请输入教学老师" }
-          }
+            props: { placeholder: "请输入教学老师" },
+          },
         },
         {
           field: "courseType",
@@ -311,8 +291,8 @@ export default {
           span: 12,
           itemRender: {
             name: "$input",
-            props: { placeholder: "请输入课程类型" }
-          }
+            props: { placeholder: "请输入课程类型" },
+          },
         },
         {
           field: "courseScore",
@@ -320,8 +300,8 @@ export default {
           span: 12,
           itemRender: {
             name: "$input",
-            props: { placeholder: "请输入课程学分" }
-          }
+            props: { placeholder: "请输入课程学分" },
+          },
         },
 
         {
@@ -335,25 +315,25 @@ export default {
                 props: {
                   type: "submit",
                   content: "提交",
-                  status: "primary"
-                }
+                  status: "primary",
+                },
               },
               {
                 props: {
                   type: "reset",
-                  content: "重置"
-                }
-              }
-            ]
-          }
-        }
+                  content: "重置",
+                },
+              },
+            ],
+          },
+        },
       ],
 
       formData_random: {
         size: null,
         institution: null,
         type: null,
-        score: null
+        score: null,
       },
 
       formItems_random: [
@@ -362,7 +342,7 @@ export default {
           span: 24,
           titleAlign: "left",
           titleWidth: 200,
-          titlePrefix: { icon: "fa fa-address-card-o" }
+          titlePrefix: { icon: "fa fa-address-card-o" },
         },
 
         {
@@ -371,8 +351,8 @@ export default {
           span: 12,
           itemRender: {
             name: "$input",
-            props: { placeholder: "请输入创建数量" }
-          }
+            props: { placeholder: "请输入创建数量" },
+          },
         },
 
         {
@@ -395,9 +375,9 @@ export default {
               { label: "医学院", value: "10" },
               { label: "军事学院", value: "11" },
               { label: "管理学院", value: "12" },
-              { label: "艺术学院", value: "13" }
-            ]
-          }
+              { label: "艺术学院", value: "13" },
+            ],
+          },
         },
 
         {
@@ -409,9 +389,9 @@ export default {
             options: [
               { label: "随机", value: "随机" },
               { label: "必修", value: "必修" },
-              { label: "选修", value: "选修" }
-            ]
-          }
+              { label: "选修", value: "选修" },
+            ],
+          },
         },
 
         {
@@ -420,8 +400,8 @@ export default {
           span: 12,
           itemRender: {
             name: "$input",
-            props: { placeholder: "请输入指定学分(输入0为随机)" }
-          }
+            props: { placeholder: "请输入指定学分(输入0为随机)" },
+          },
         },
 
         {
@@ -435,18 +415,18 @@ export default {
                 props: {
                   type: "submit",
                   content: "提交",
-                  status: "primary"
-                }
+                  status: "primary",
+                },
               },
               {
                 props: {
                   type: "reset",
-                  content: "重置"
-                }
-              }
-            ]
-          }
-        }
+                  content: "重置",
+                },
+              },
+            ],
+          },
+        },
       ],
 
       courseNameFilter: [
@@ -454,17 +434,15 @@ export default {
         { label: "初级课程", value: /.*初级课程$/ },
         { label: "中级课程", value: /.*中级课程$/ },
         { label: "高级课程", value: /.*高级课程$/ },
-        { label: "进阶课程", value: /.*进阶课程$/ }
+        { label: "进阶课程", value: /.*进阶课程$/ },
       ],
 
       courseInstitutionFilter: [],
-
     };
-    
   },
 
   created() {
-    this.initcourseInstitutionFilter()
+    this.initcourseInstitutionFilter();
   },
 
   methods: {
@@ -472,60 +450,57 @@ export default {
       return row.courseName.match(value);
     },
 
-
     filterCourseScoreMethod({ option, row }) {
       return row.courseScore === Number(option.data);
     },
 
     //在created中调用,用于初始化courseInstitutionFilter
-    initcourseInstitutionFilter(){
-      let element =''
-      this.allcourseInstitution.forEach((item,index)=>{
-        element = item + '院'
-        this.courseInstitutionFilter.push({label: element, value: element})
-      })
+    initcourseInstitutionFilter() {
+      let element = "";
+      this.allcourseInstitution.forEach((item, index) => {
+        element = item + "院";
+        this.courseInstitutionFilter.push({ label: element, value: element });
+      });
     },
 
-    filtercourseInstitutionMethod({value , row}){
+    filtercourseInstitutionMethod({ value, row }) {
       return row.courseInstitution == value;
     },
 
     //在点击表格单元格时调用
-    cellClickEvent ({row}) {
-      this.detailData = [{pk:'courseId',name:'课程编号'},
-      {pk:'courseName',name:'课程名称'},
-      {pk:'courseInstitution',name:'教学学院'},
-      {pk:'courseLecturer',name:'教学老师'},
-      {pk:'courseType',name:'课程类型'},
-      {pk:'courseScore',name:'课程学分'},
-      {pk:'courseVolume',name:'课程容量'},
-      {pk:'courseArea',name:'教学地点'},
-      {pk:'courseTime',name:'教学时间'}].map(field => {
-        return {label:field.name ,value:row[field.pk]}
-        })
-      this.showDetails =true
-      },
-
-    editRowEvent(row) {
-      this.$refs.xTable.setActiveRow(row);
+    viewDetails(row) {
+      this.detailData = [
+        { pk: "courseId", name: "课程编号" },
+        { pk: "courseName", name: "课程名称" },
+        { pk: "courseInstitution", name: "教学学院" },
+        { pk: "courseLecturer", name: "教学老师" },
+        { pk: "courseType", name: "课程类型" },
+        { pk: "courseScore", name: "课程学分" },
+        { pk: "courseSize", name: "已注册人数" },
+        { pk: "courseVolume", name: "课程容量" },
+        { pk: "courseArea", name: "教学地点" },
+        { pk: "courseTime", name: "教学时间" },
+      ].map((field) => {
+        return { label: field.name, value: row[field.pk] };
+      });
+      this.showDetails = true;
     },
 
-    saveRowEvent(row) {
-      this.$refs.xTable.clearActived().then(() => {
-        this.loading = true;
-        setTimeout(() => {
-          this.loading = false;
-          this.$XModal.message({ message: "保存成功！", status: "success" });
-        }, 300);
-      });
-    },
-
-    cancelRowEvent(row) {
-      const xTable = this.$refs.xTable;
-      xTable.clearActived().then(() => {
-        // 还原行数据
-        xTable.revertData(row);
-      });
+    editEvent(row) {
+      this.formData = {
+        courseId: row.courseId,
+        courseName: row.courseName,
+        courseInstitution: row.courseInstitution,
+        courseLecturer: row.courseLecturer,
+        courseType: row.courseType,
+        courseScore: row.courseScore,
+        courseSize: row.courseSize,
+        courseVolume: row.courseVolume,
+        courseArea: row.courseArea,
+        courseTime: row.courseTime,
+      };
+      this.selectRow = row;
+      this.showEdit = true;
     },
 
     //新建一个空白课程信息
@@ -536,7 +511,11 @@ export default {
         courseInstitution: "",
         courseLecturer: "",
         courseType: "",
-        courseScore: ""
+        courseScore: "",
+        courseSize: "",
+        courseVolume: "",
+        courseArea: "",
+        courseTime: "",
       };
       this.selectRow = null;
       this.showEdit = true;
@@ -547,7 +526,7 @@ export default {
         size: "",
         institution: "",
         type: "",
-        score: ""
+        score: "",
       }),
         (this.showRandom = true);
     },
@@ -573,7 +552,6 @@ export default {
         if (institutionPrefix == "-1") {
           index = Math.round(Math.random() * 12);
           randomInstitution = this.allcourseInstitution[index] + "院";
-
         } else {
           index = parseInt(institutionPrefix) - 1;
           randomInstitution = this.allcourseInstitution[index] + "院";
@@ -581,18 +559,19 @@ export default {
 
         //设定学院可对应的课程编号
         let suitableArray = [];
-        let reg = ''
+        let reg = "";
 
         //遍历获得可对应的课程信息
-        if(institutionPrefix == "-1"){
-          let prefix = '0'
-          index < 9 ? prefix = '0' + (index+1).toString() : prefix = (index+1).toString()
+        if (institutionPrefix == "-1") {
+          let prefix = "0";
+          index < 9
+            ? (prefix = "0" + (index + 1).toString())
+            : (prefix = (index + 1).toString());
           reg = new RegExp("^" + prefix + ".*$");
-          console.log(prefix)
-        }else{
+        } else {
           reg = new RegExp("^" + institutionPrefix + ".*$");
         }
-        
+
         for (let j = 0; j < this.allCourses.length - 1; j++) {
           if (this.allCourses[j].match(reg)) {
             suitableArray.push(this.allCourses[j]);
@@ -613,7 +592,7 @@ export default {
           "",
           "",
           "",
-          ""
+          "",
         ];
         for (let k = 0; k < suitableArray.length - 1; k++) {
           randomCourse =
@@ -682,6 +661,29 @@ export default {
             ];
         }
 
+        //设定课程容量
+        let randomCourseVolume = Math.round(Math.random() * 100) + 50;
+
+        //设定课程地点
+        let buildingIndicator = Math.round(Math.random() * 5) + 1;
+        let floorIndicator = Math.round(Math.random() * 5) + 1;
+        let roomIndicator = Math.round(Math.random() * 8) + 1;
+        let randomCourseArea =
+          buildingIndicator.toString() +
+          floorIndicator.toString() +
+          "0" +
+          roomIndicator.toString();
+
+        //设定课程时间
+        const daySeed = ["周一", "周二", "周三", "周四", "周五"];
+        let day = daySeed[Math.round(Math.random() * daySeed.length - 1)];
+        const sessionSeed = ["一", "二", "三", "四", "五", "六"];
+        let session =
+          "第" +
+          sessionSeed[Math.round(Math.random() * sessionSeed.length - 1)] +
+          "大节";
+        let randomCourseTime = day + " " + session;
+
         //导入数据
         this.courses.push({
           courseId: randomId,
@@ -689,7 +691,11 @@ export default {
           courseInstitution: randomInstitution,
           courseLecturer: randomLecturer,
           courseScore: randomScore,
-          courseType: randomType
+          courseType: randomType,
+          courseSize: 0,
+          courseVolume: randomCourseVolume,
+          courseArea: randomCourseArea,
+          courseTime: randomCourseTime,
         });
       }
     },
@@ -716,9 +722,8 @@ export default {
         courseName: "",
         courseInstitution: "",
         courseLecturer: "",
-        courseScore: ""
+        courseScore: "",
       });
-      console.log(XEUtils.isFinite(0));
     },
 
     //移除被勾选框选中的若干行
@@ -799,10 +804,10 @@ export default {
           courseInstitution: randomInstitution,
           courseLecturer: randomLecturer,
           courseScore: randomScore,
-          courseType: randomType
+          courseType: randomType,
         });
       }
-    }
+    },
   },
   computed: {
     ...mapState(["courses"]),
@@ -811,28 +816,42 @@ export default {
     ...mapState(["familyNameSeed"]),
     ...mapState(["givenNameSeed"]),
 
-     list () {
-        const filterName = XEUtils.toString(this.filterName).trim().toLowerCase() //转字符串,清除空格,转小写
-        if (filterName) {
-          const filterRE = new RegExp(filterName, 'gi') //全局匹配,大小写不敏感
-          const searchProps = ['courseId', 'courseName', 'courseInstitution', 'courseLecturer','courseScore','courseType'] //搜索项
-          //some() 方法用于检测数组中的元素是否满足指定条件
-          const rest = this.courses.filter(item => searchProps.some(key => XEUtils.toString(item[key]).toLowerCase().indexOf(filterName) > -1))
-          return rest.map(row => {
-            const item = Object.assign({}, row)
-            searchProps.forEach(key => {
-              item[key] = XEUtils.toString(item[key]).replace(filterRE, match => `<span class="keyword-lighten">${match}</span>`)
-            })
-              return item
-            })
-          }
-          return this.courses
-        }
-
+    list() {
+      const filterName = XEUtils.toString(this.filterName).trim().toLowerCase(); //转字符串,清除空格,转小写
+      if (filterName) {
+        const filterRE = new RegExp(filterName, "gi"); //全局匹配,大小写不敏感
+        const searchProps = [
+          "courseId",
+          "courseName",
+          "courseInstitution",
+          "courseLecturer",
+          "courseScore",
+          "courseType",
+        ]; //搜索项
+        //some() 方法用于检测数组中的元素是否满足指定条件
+        const rest = this.courses.filter((item) =>
+          searchProps.some(
+            (key) =>
+              XEUtils.toString(item[key]).toLowerCase().indexOf(filterName) > -1
+          )
+        );
+        return rest.map((row) => {
+          const item = Object.assign({}, row);
+          searchProps.forEach((key) => {
+            item[key] = XEUtils.toString(item[key]).replace(
+              filterRE,
+              (match) => `<span class="keyword-lighten">${match}</span>`
+            );
+          });
+          return item;
+        });
+      }
+      return this.courses;
+    },
   },
   components: {
-    topbar
-  }
+    topbar,
+  },
 };
 </script>
 
@@ -857,6 +876,6 @@ export default {
 }
 .keyword-lighten {
   color: #000;
-  background-color: #FFFF00;
+  background-color: #ffff00;
 }
 </style>

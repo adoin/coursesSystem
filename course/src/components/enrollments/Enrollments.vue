@@ -94,30 +94,50 @@
 
             <vxe-table-column title="操作">
               <template slot-scope="scope">
-                <el-button type="text" size="small">详细信息</el-button>
+                <el-button type="text" size="small" @click="viewDetails(scope.row)">详细信息</el-button>
                 <el-button
                   type="text"
                   size="small"
                   v-if="checkReg(scope.row.courseId)"
-                  @click="register(scope.row.courseId, scope.row.courseName)"
+                  @click="register(scope.row)"
                   >注册课程</el-button
                 >
                 <el-button
                   type="text"
                   size="small"
                   v-else
-                  @click="cancel(scope.row.courseId, scope.row.courseName)"
+                  @click="cancel(scope.row)"
                   style="color:red"
                   >取消课程</el-button
                 >
               </template>
             </vxe-table-column>
           </vxe-table>
+
+          <vxe-modal v-model="showDetails" title="查看详情" width="600" height="400" :mask="false" :lock-view="false" resize>
+          <template v-slot>
+            <vxe-table
+              border="inner"
+              auto-resize
+              show-overflow
+              highlight-hover-row
+              height="auto"
+              :show-header="false"
+              :sync-resize="showDetails"
+              :data="detailData">
+              <vxe-table-column field="label" width="40%"></vxe-table-column>
+              <vxe-table-column field="value"></vxe-table-column>
+            </vxe-table>
+          </template>
+        </vxe-modal>
+
         </div>
       </el-main>
     </el-container>
   </div>
 </template>
+
+
 
 <script>
 import { mapState } from "vuex";
@@ -131,8 +151,10 @@ export default {
       accountFound: false,
       currentStudentId: '',
       showselected:false,
+      showDetails:false,
       searchItem: '',
-      queryList: []
+      queryList: [],
+      detailData:[]
     };
   },
 
@@ -271,7 +293,22 @@ export default {
       }
     },
 
-    register(id, name) {
+    viewDetails (row) {
+      this.detailData = [{pk:'courseId',name:'课程编号'},
+      {pk:'courseName',name:'课程名称'},
+      {pk:'courseInstitution',name:'教学学院'},
+      {pk:'courseLecturer',name:'教学老师'},
+      {pk:'courseType',name:'课程类型'},
+      {pk:'courseScore',name:'课程学分'},
+      {pk:'courseSize',name:'已注册人数'},
+      {pk:'courseVolume',name:'课程容量'},
+      {pk:'courseArea',name:'教学地点'},
+      {pk:'courseTime',name:'教学时间'}].map(field => {
+        return {label:field.name ,value:row[field.pk]}
+        })
+      this.showDetails =true
+      },
+    register(row) {
       if (this.$store.state.currentStudentId== "") {
         alert("请先登录账号");
       } else {
@@ -279,13 +316,14 @@ export default {
           if (this.students[i].studentId == this.$store.state.currentStudentId) {
             //定位该学生
 
-            let [regId, regCourse] = [id, name];
+            let [regId, regCourse] = [row.courseId, row.courseName];
+            this.courses[this.courses.indexOf(row)].courseSize ++
 
             if (this.students[i].regId != undefined) {
               //如果该学生已经注册过任意课程了
               console.log(1)
-              regId = id + " " + this.students[i].regId;
-              regCourse = name + " " + this.students[i].regCourse;
+              regId = row.courseId + " " + this.students[i].regId;
+              regCourse = row.courseName + " " + this.students[i].regCourse;
             }
 
 
@@ -302,11 +340,11 @@ export default {
             console.log("注册成功");
 
             this.resultList.push({
-                primaryKey:this.students[i].studentId + id,
+                primaryKey:this.students[i].studentId + row.courseId,
                 studentId: this.students[i].studentId,
                 studentName: this.students[i].studentName,
-                courseId: id,
-                courseName: name,
+                courseId: row.courseId,
+                courseName: row.courseName,
                 courseResult:''
             })
 
@@ -316,11 +354,13 @@ export default {
       }
     },
 
-    cancel(id, name) {
+    cancel(row) {
       for (let i = 0; i < this.students.length - 1; i++) {
         if (this.students[i].studentId == this.$store.state.currentStudentId) {
-          let regId = this.students[i].regId.replace(id, ""); //删除regId中对应的courseId
-          let regCourse = this.students[i].regCourse.replace(name, ""); //删除regCourse中对于的courseName
+          let regId = this.students[i].regId.replace(row.courseId, ""); //删除regId中对应的courseId
+          let regCourse = this.students[i].regCourse.replace(row.courseName, ""); //删除regCourse中对于的courseName
+          this.courses[this.courses.indexOf(row)].courseSize --
+          
           console.log(regId);
 
           this.students.splice(i, 1, {

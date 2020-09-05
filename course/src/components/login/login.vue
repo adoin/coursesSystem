@@ -1,16 +1,37 @@
 <template>
 <el-container>
     <el-header>
+<!--
     <div v-show="this.$store.state.loginStatus">
+      
       <div class="header" v-show="this.$store.state.adminType">
         课程信息系统(管理员)
       </div>
+
       <div class="header" v-show="this.$store.state.studentType">
         课程信息系统(学生)
       </div>
+
     </div>
-    <div v-show="!this.$store.state.loginStatus" class="header">课程信息系统</div>
+-->
+
+  <div>
+    <span style="float:left; color:black; font-size: 26px;" >课程信息系统</span>
+    <el-dropdown style="float:right; vertical-align: top;" @command="handleCommand" v-show="this.$store.state.studentType"> 
+      <el-button type="primary">
+        欢迎您,{{currentStudentName}}<i class="el-icon-arrow-down el-icon--right"></i>
+      </el-button>
+      <el-dropdown-menu trigger="click" >
+        <el-dropdown-item command="a">修改密码</el-dropdown-item>
+        <el-dropdown-item command="b">注销账号</el-dropdown-item>
+      </el-dropdown-menu>
+    </el-dropdown>
+  </div>
+
+
     </el-header>
+
+
 
     <el-main>
       <div height:100px></div>
@@ -54,6 +75,7 @@
 </template>
 
 <script>
+import { mapState } from "vuex";
 export default {
   data() {
     return {
@@ -62,7 +84,21 @@ export default {
       accountFound: false
     };
   },
+  computed:{
+    ...mapState(["currentStudentName"]),
+  },
   methods: {
+
+    handleCommand(command){
+      switch(command){
+        case 'a':
+          this.$router.push('/PasswordManager')
+          break
+        case 'b':
+          alert('退出系统')
+          break
+      }
+    },
     login() {
       if (this.inputId == "admin") {
         this.$store.state.loginStatus = true;
