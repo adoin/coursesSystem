@@ -242,15 +242,29 @@ export default {
     },
 
     randomlyAssign(){
-        for(let item of this.resultList){
-            item.courseResult=Math.round(Math.random(1)*25)+Math.round(Math.random(2)*25)+Math.round(Math.random(3)*25)+Math.round(Math.random(4)*25)+25
-            if(item.courseResult>=90){
-                item.courseResult-=10
-            if(item.courseResult>=100){
-                item.courseResult=90+Math.round(Math.random(5)*10)
-            }
-            }
+
+      let studentIdList=this.students.map(item => parseInt(item.studentId))
+
+      for(let item of this.resultList){
+
+        //赋分
+        item.courseResult=Math.round(Math.random(1)*25)+Math.round(Math.random(2)*25)+Math.round(Math.random(3)*25)+Math.round(Math.random(4)*25)+25
+        if(item.courseResult>=90){
+            item.courseResult-=10
         }
+        if(item.courseResult>=100){
+            item.courseResult=90+Math.round(Math.random(5)*10)
+        }
+        //锁定课程
+        let studentId=item.primaryKey.substring(0,6)
+        let courseId=item.primaryKey.substring(6)
+        let index=studentIdList.indexOf(parseInt(studentId))
+        
+        if(this.students[index].lockedId.indexOf(courseId)== -1){
+          this.students[index].lockedId.push(courseId)
+        }
+        
+      }
     }
   },
   computed: {

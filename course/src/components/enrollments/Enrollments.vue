@@ -308,6 +308,7 @@ export default {
         })
       this.showDetails =true
       },
+
     register(row) {
       if (this.$store.state.currentStudentId== "") {
         alert("请先登录账号");
@@ -334,10 +335,13 @@ export default {
               studentName: this.students[i].studentName,
               studentPassword: this.students[i].studentPassword,
               regId: regId,
-              regCourse: regCourse
+              regCourse: regCourse,
+              lockedId:[]
             });
+
             console.log(this.students[i])
             console.log("注册成功");
+
 
             this.resultList.push({
                 primaryKey:this.students[i].studentId + row.courseId,
@@ -345,6 +349,7 @@ export default {
                 studentName: this.students[i].studentName,
                 courseId: row.courseId,
                 courseName: row.courseName,
+                courseScore: row.courseScore,
                 courseResult:''
             })
 
@@ -355,22 +360,30 @@ export default {
     },
 
     cancel(row) {
+      
       for (let i = 0; i < this.students.length - 1; i++) {
+        
         if (this.students[i].studentId == this.$store.state.currentStudentId) {
+          if(this.students[i].lockedId.indexOf(row.courseId.toString()) !=-1){
+            alert('课程已锁定,无法取消')
+            break
+          }
+
           let regId = this.students[i].regId.replace(row.courseId, ""); //删除regId中对应的courseId
           let regCourse = this.students[i].regCourse.replace(row.courseName, ""); //删除regCourse中对于的courseName
           this.courses[this.courses.indexOf(row)].courseSize --
           
           console.log(regId);
 
+          //改变该学生对应的数组内存储的对象
           this.students.splice(i, 1, {
-            //改变该学生对应的数组内存储的对象
             studentId: this.students[i].studentId,
             studentName: this.students[i].studentName,
             studentPassword: this.students[i].studentPassword,
             regId: regId,
-            regCourse: regCourse
+            regCourse: regCourse,
           });
+
         }
       }
     }

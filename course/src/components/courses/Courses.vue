@@ -640,26 +640,23 @@ export default {
 
         //设定教师
         let randomLecturer = "";
-        if (Math.floor(Math.round(Math.random())) == 1) {
-          randomLecturer =
-            this.familyNameSeed[
-              Math.round(Math.random() * (this.familyNameSeed.length - 1))
-            ] +
-            this.givenNameSeed[
-              Math.round(Math.random() * (this.givenNameSeed.length - 1))
-            ] +
-            this.givenNameSeed[
-              Math.round(Math.random() * (this.givenNameSeed.length - 1))
-            ];
-        } else {
-          randomLecturer =
-            this.familyNameSeed[
-              Math.round(Math.random() * (this.familyNameSeed.length - 1))
-            ] +
-            this.givenNameSeed[
-              Math.round(Math.random() * (this.givenNameSeed.length - 1))
-            ];
+        let modifier = Math.floor(Math.random()*100)
+        if(modifier <=80){
+            randomLecturer = this.familyNameSeed[Math.round(Math.random() * (this.familyNameSeed.length - 1))] +
+            this.givenNameSeed[Math.round(Math.random() * (this.givenNameSeed.length - 1))]
         }
+        else if(modifier >80 && modifier<=95){
+          randomLecturer = this.rareFamilyNameSeed[Math.round(Math.random() * (this.familyNameSeed.length - 1))] +
+            this.givenNameSeed[Math.round(Math.random() * (this.givenNameSeed.length - 1))]
+        }
+        else if(modifier>95){
+          randomLecturer = this.extremeRareFamilyNameSeed[Math.round(Math.random() * (this.familyNameSeed.length - 1))] +
+            this.givenNameSeed[Math.round(Math.random() * (this.givenNameSeed.length - 1))]
+        }
+        if(Math.round(Math.random()==1)){
+          randomLecturer = randomLecturer + this.givenNameSeed[Math.round(Math.random() * (this.givenNameSeed.length - 1))];
+        }
+
 
         //设定课程容量
         let randomCourseVolume = Math.round(Math.random() * 100) + 50;
@@ -676,11 +673,11 @@ export default {
 
         //设定课程时间
         const daySeed = ["周一", "周二", "周三", "周四", "周五"];
-        let day = daySeed[Math.round(Math.random() * daySeed.length - 1)];
+        let day = daySeed[Math.round(Math.random() * (daySeed.length -1))];
         const sessionSeed = ["一", "二", "三", "四", "五", "六"];
         let session =
           "第" +
-          sessionSeed[Math.round(Math.random() * sessionSeed.length - 1)] +
+          sessionSeed[Math.round(Math.random() * (sessionSeed.length-1))] +
           "大节";
         let randomCourseTime = day + " " + session;
 
@@ -814,6 +811,8 @@ export default {
     ...mapState(["allCourses"]),
     ...mapState(["allcourseInstitution"]),
     ...mapState(["familyNameSeed"]),
+    ...mapState(["rareFamilyNameSeed"]),
+    ...mapState(["extremeRareFamilyNameSeed"]),
     ...mapState(["givenNameSeed"]),
 
     list() {

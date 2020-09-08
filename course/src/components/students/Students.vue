@@ -370,17 +370,7 @@ export default {
         regId: ""
       });
       console.log(this.students);
-      if (true) {
-        alert(
-          "学生:" +
-            this.name +
-            "\n分配学号:" +
-            randomStudentId +
-            "\n初始密码:" +
-            randomStudentPassword +
-            "\n注册成功"
-        );
-      }
+      alert("学生:" + this.name + "\n分配学号:" + randomStudentId + "\n初始密码:" + randomStudentPassword + "\n注册成功")
     },
     CustomRegister() {
       this.customReg = !this.customReg;
@@ -475,58 +465,10 @@ export default {
       return password;
     },
     //随机生成一个名字
+
     randomInitName(seed) {
-      const familyNameSeed = [
-        "前",
-        "湛",
-        "夕",
-        "南",
-        "东",
-        "方",
-        "戏",
-        "曲",
-        "言",
-        "墨",
-        "花",
-        "居",
-        "多",
-        "巧",
-        "贸",
-        "声",
-        "波"
-      ];
-      const givenNameSeed = [
-        "依",
-        "白",
-        "暄",
-        "和",
-        "向",
-        "雪",
-        "俊",
-        "美",
-        "从",
-        "筠",
-        "香",
-        "薇",
-        "线",
-        "翰",
-        "海",
-        "腾",
-        "云",
-        "霞",
-        "蓓",
-        "蕾",
-        "天",
-        "青",
-        "正",
-        "娴",
-        "婉",
-        "以",
-        "珊",
-        "慕",
-        "傲",
-        "双"
-      ];
+      const familyNameSeed = this.$store.state.familyNameSeed
+      const givenNameSeed = this.$store.state.givenNameSeed
       let fullname = "";
       if (Math.floor(Math.round(Math.random(seed))) == 1) {
         fullname =
