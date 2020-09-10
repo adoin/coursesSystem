@@ -543,158 +543,201 @@ export default {
     },
 
     courseGenerator(size, institutionPrefix, type, score) {
-      for (let i = 0; i < size; i++) {
-        let index = 0; //index用于取出allcourseInstitution里面的学院
 
-        //设定学院
-        let randomInstitution = "";
 
-        if (institutionPrefix == "-1") {
-          index = Math.round(Math.random() * 12);
-          randomInstitution = this.allcourseInstitution[index] + "院";
-        } else {
-          index = parseInt(institutionPrefix) - 1;
-          randomInstitution = this.allcourseInstitution[index] + "院";
+      let index_institution = 0; //学院索引
+      let indexList_course =[]
+      let institutionList = []; //学院数组
+      let courseIdList =[]
+      let courseNameList =[]
+
+
+      //当选择的学院类型为随机时
+      if(institutionPrefix == "-1") {
+        
+        for(let i=0;i<size;i++){
+          //随机设定课程
+          let count = 0
+          let course = this.allCourses[Math.round(Math.random() * this.allCourses.length -1)]
+          let courseId = course.substring(0,6) //课程编号
+          let courseName = course.substring(6) //课程名称
+          let institution = this.allcourseInstitution[parseInt(courseId.substring(0,2)) - 1] //对应学院
+          if(courseIdList.indexOf(courseId) == -1){
+            courseIdList.push(courseId)
+            courseNameList.push(courseName)
+            institutionList.push(institution)
+          }else{
+            i--
+            count++
+            if(count>10000){
+              alert('error')
+              break
+            }
+            continue
+          }
         }
+      }
 
-        //设定学院可对应的课程编号
-        let suitableArray = [];
-        let reg = "";
+      //当选择的学院类型为固定某种时
+      else if(institutionPrefix != "-1") {
+        index_institution = parseInt(institutionPrefix) - 1;
 
-        //遍历获得可对应的课程信息
-        if (institutionPrefix == "-1") {
-          let prefix = "0";
-          index < 9
-            ? (prefix = "0" + (index + 1).toString())
-            : (prefix = (index + 1).toString());
-          reg = new RegExp("^" + prefix + ".*$");
-        } else {
-          reg = new RegExp("^" + institutionPrefix + ".*$");
+        //设定学院数组
+        for(let i=0;i<size;i++){
+          institutionList.push(this.allcourseInstitution[index_institution] + "院")
         }
+      
+        //设定查询的正则表达式
+        let reg = new RegExp("^"+institutionPrefix+".*$")
 
-        for (let j = 0; j < this.allCourses.length - 1; j++) {
-          if (this.allCourses[j].match(reg)) {
-            suitableArray.push(this.allCourses[j]);
+        let suitableArray=[]
+        //查询对应学院的所有可创建的课程
+        for (let i = 0; i < this.allCourses.length - 1; i++) {
+          if (this.allCourses[i].match(reg)) {
+            suitableArray.push(this.allCourses[i]);
           }
         }
 
-        /*
-        //查询次数
-        if(i>suitableArray.length-1){
-          alert('课程溢出')
-          break
-        }
-        */
-
-        //从可对应的课程信息里面选一个
-        const levelSeed = ["初级课程", "中级课程", "高级课程", "进阶课程"];
-        let [randomCourse, randomLevel, randomId, randomCourseName] = [
-          "",
-          "",
-          "",
-          "",
-        ];
-        for (let k = 0; k < suitableArray.length - 1; k++) {
-          randomCourse =
-            suitableArray[
-              Math.round(Math.random() * (suitableArray.length - 1))
-            ]; //随机取出一个元素
-          randomLevel =
-            levelSeed[Math.round(Math.random() * (levelSeed.length - 1))]; //课程难度
-          randomId = randomCourse.substring(0, 6); //取出课程编号
-          randomCourseName = randomCourse.substring(6) + randomLevel; //取出课程名称
+        console.log(suitableArray)
+        if(size>suitableArray.length){
+          alert(`该学院最多支持${suitableArray.length}门课程`)
+          size=suitableArray.length
         }
 
-        /*
-        //查询重复
-        let findRepeat=false
-        for(let item of this.courses){
-          if(item.courseId.indexOf(randomId)!=-1){
-            findRepeat=true
-            break
-          }
+        //设定选用的课程
+        for(let i=0;i<size;i++){
+          let count =0
+          let index= Math.round(Math.random()*(suitableArray.length -1))
+          
+          if(indexList_course.indexOf(index) ==-1){
+            indexList_course.push(index)
+          }else{
+            i--
+            count++
+            if(count>=10000){
+              alert('error')
+              break
+            }
+            continue
+          }  
         }
 
-        if(findRepeat==true){
-          i--
-          continue
+        //将课程编号与课程名称取出
+        for(let i=0;i<indexList_course.length;i++){
+          let index = indexList_course[i]
+          let courseId = suitableArray[index].substring(0,6)
+          let coursName = suitableArray[index].substring(6)
+          courseIdList.push(courseId)
+          courseNameList.push(coursName)
         }
-        */
+      }
+      
         //设定课程类型
-        let randomType = "";
+        let typeList = [];
 
         if (type == "随机") {
-          randomType = Math.round(Math.random() * 3) >= 2 ? "必修" : "选修"; //0~3
+          for(let i=0;i<size;i++){
+            typeList.push(Math.round(Math.random() * 3) >= 2 ? "必修" : "选修")
+          }
         } else {
-          randomType = type;
+          for(let i=0;i<size;i++){
+            typeList.push(type)
+          }
         }
 
         //设定学分
-        let randomScore = "";
+        let scoreList = [];
 
         if (score == "0") {
-          randomScore = Math.round(Math.random() * 5);
+          for(let i=0;i<size;i++){
+            scoreList.push(Math.round(Math.random() * 5 +1))
+          }
         } else {
-          randomScore = score;
+          for(let i=0;i<size;i++){
+            scoreList.push(score)
+          }
         }
 
         //设定教师
-        let randomLecturer = "";
-        let modifier = Math.floor(Math.random()*100)
-        if(modifier <=80){
-            randomLecturer = this.familyNameSeed[Math.round(Math.random() * (this.familyNameSeed.length - 1))] +
-            this.givenNameSeed[Math.round(Math.random() * (this.givenNameSeed.length - 1))]
+        let lecturerList = [];
+        for(let i=0;i<size;i++){
+          let randomLecturer =''
+          
+          let modifier = Math.floor(Math.random()*100)
+
+          if(modifier <=80){
+              randomLecturer = this.familyNameSeed[Math.round(Math.random() * (this.familyNameSeed.length - 1))] +
+              this.givenNameSeed[Math.round(Math.random() * (this.givenNameSeed.length - 1))]
+          }
+          else if(modifier >80 && modifier<=95){
+            randomLecturer = this.rareFamilyNameSeed[Math.round(Math.random() * (this.familyNameSeed.length - 1))] +
+              this.givenNameSeed[Math.round(Math.random() * (this.givenNameSeed.length - 1))]
+          }
+          else if(modifier>95){
+            randomLecturer = this.extremeRareFamilyNameSeed[Math.round(Math.random() * (this.familyNameSeed.length - 1))] +
+              this.givenNameSeed[Math.round(Math.random() * (this.givenNameSeed.length - 1))]
+          }
+          if(Math.round(Math.random()==1)){
+            randomLecturer = randomLecturer + this.givenNameSeed[Math.round(Math.random() * (this.givenNameSeed.length - 1))];
+          }
+
+          lecturerList.push(randomLecturer)
         }
-        else if(modifier >80 && modifier<=95){
-          randomLecturer = this.rareFamilyNameSeed[Math.round(Math.random() * (this.familyNameSeed.length - 1))] +
-            this.givenNameSeed[Math.round(Math.random() * (this.givenNameSeed.length - 1))]
-        }
-        else if(modifier>95){
-          randomLecturer = this.extremeRareFamilyNameSeed[Math.round(Math.random() * (this.familyNameSeed.length - 1))] +
-            this.givenNameSeed[Math.round(Math.random() * (this.givenNameSeed.length - 1))]
-        }
-        if(Math.round(Math.random()==1)){
-          randomLecturer = randomLecturer + this.givenNameSeed[Math.round(Math.random() * (this.givenNameSeed.length - 1))];
-        }
+
 
 
         //设定课程容量
-        let randomCourseVolume = Math.round(Math.random() * 100) + 50;
+        let courseVolumeList =[]
+        for(let i=0;i<size;i++){
+          courseVolumeList.push(Math.round(Math.random() * 100) + 50)
+        }
+         
 
         //设定课程地点
-        let buildingIndicator = Math.round(Math.random() * 5) + 1;
-        let floorIndicator = Math.round(Math.random() * 5) + 1;
-        let roomIndicator = Math.round(Math.random() * 8) + 1;
-        let randomCourseArea =
-          buildingIndicator.toString() +
-          floorIndicator.toString() +
-          "0" +
-          roomIndicator.toString();
+        let courseAreaList=[]
+
+        for(let i=0;i<size;i++){
+          let buildingIndicator = Math.round(Math.random() * 5) + 1;
+          let floorIndicator = Math.round(Math.random() * 5) + 1;
+          let roomIndicator = Math.round(Math.random() * 8) + 1;
+          let randomCourseArea = buildingIndicator.toString() + floorIndicator.toString() + "0" + roomIndicator.toString();
+          courseAreaList.push(randomCourseArea)
+        }
+
 
         //设定课程时间
-        const daySeed = ["周一", "周二", "周三", "周四", "周五"];
-        let day = daySeed[Math.round(Math.random() * (daySeed.length -1))];
-        const sessionSeed = ["一", "二", "三", "四", "五", "六"];
-        let session =
-          "第" +
-          sessionSeed[Math.round(Math.random() * (sessionSeed.length-1))] +
-          "大节";
-        let randomCourseTime = day + " " + session;
+        let courseTimeList=[]
+        for(let i=0;i<size;i++){
+          const daySeed = ["周一", "周二", "周三", "周四", "周五"];
+          let day = daySeed[Math.round(Math.random() * (daySeed.length -1))];
+          const sessionSeed = ["一", "二", "三", "四", "五", "六"];
+          let session =
+            "第" +
+            sessionSeed[Math.round(Math.random() * (sessionSeed.length-1))] +
+            "大节";
+          let randomCourseTime = day + " " + session;
+          courseTimeList.push(randomCourseTime)
+        }
+
 
         //导入数据
-        this.courses.push({
-          courseId: randomId,
-          courseName: randomCourseName,
-          courseInstitution: randomInstitution,
-          courseLecturer: randomLecturer,
-          courseScore: randomScore,
-          courseType: randomType,
+        for(let i=0;i<size;i++){
+          this.courses.push({
+          courseId: courseIdList[i],
+          courseName: courseNameList[i],
+          courseInstitution: institutionList[i],
+          courseLecturer: lecturerList[i],
+          courseScore: scoreList[i],
+          courseType: typeList[i],
           courseSize: 0,
-          courseVolume: randomCourseVolume,
-          courseArea: randomCourseArea,
-          courseTime: randomCourseTime,
-        });
-      }
+          courseVolume: courseVolumeList[i],
+          courseArea: courseAreaList[i],
+          courseTime:courseTimeList[i],
+        })
+        }
+
+
+      
     },
 
     submitEvent() {

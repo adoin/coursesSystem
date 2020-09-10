@@ -495,20 +495,21 @@ export default {
     //随机生成size组学号,名字,密码
     randomInitData(size) {
       for (let i = 0; i < size; i++) {
-        let randomStudentId = this.randomInitStudentId("seed1");
+        let randomStudentId = this.randomInitStudentId("seed1").toString();
         let randomName = this.randomInitName("seed2");
         let randomStudentPassword = this.randomInitPassword("seed3", 6);
         this.students.push({
           studentId: randomStudentId,
           studentName: randomName,
           studentPassword: randomStudentPassword,
-          regCourse: "",
-          regId: "",
+          regCourse: [],
+          regId: [],
           regInstitution:
             this.$store.state.allcourseInstitution[
               Math.round(Math.random() * 12)
             ] + "院",
-          studentScore: []
+          studentScore: [],
+          lockedId:[],
         });
       }
     },

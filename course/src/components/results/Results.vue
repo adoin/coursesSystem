@@ -256,11 +256,14 @@ export default {
             item.courseResult=90+Math.round(Math.random(5)*10)
         }
         //锁定课程
+        
         let studentId=item.primaryKey.substring(0,6)
         let courseId=item.primaryKey.substring(6)
-        let index=studentIdList.indexOf(parseInt(studentId))
         
-        if(this.students[index].lockedId.indexOf(courseId)== -1){
+        let index=studentIdList.indexOf(parseInt(studentId))
+        console.log(this.students)
+        
+        if(this.students[index].lockedId.indexOf(parseInt(courseId))== -1){
           this.students[index].lockedId.push(courseId)
         }
         

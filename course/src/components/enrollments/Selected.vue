@@ -245,6 +245,7 @@ export default {
               studentId: this.$store.state.students[i].studentId,
               studentName: this.$store.state.students[i].studentName,
               studentPassword: this.$store.state.students[i].studentPassword,
+              regInstitution: this.$store.state.students[i].regInstitution,
               regId: regId,
               regCourse: regCourse
             });
@@ -273,6 +274,7 @@ export default {
             studentId: this.$store.state.students[i].studentId,
             studentName: this.$store.state.students[i].studentName,
             studentPassword: this.$store.state.students[i].studentPassword,
+            regInstitution: this.$store.state.students[i].regInstitution,
             regId: regId,
             regCourse: regCourse
           });
