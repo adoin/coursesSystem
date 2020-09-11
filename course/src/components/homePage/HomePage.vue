@@ -9,8 +9,9 @@
     <el-col class="box">
 
         <el-row>
-            <span style="float:left; background:linear-gradient(to bottom , white, grey); width:498px; 
-            height:50px; font-size:30px; text-align:left; text-indent:1em; margin-bottom:10px;">学业信息</span>
+            <span style="float:left; background: #909399; width:498px; 
+            height:50px; font-size:28px; color:white; text-align:left; text-indent:1em; margin-bottom:10px; 
+            ">学业信息</span>
         </el-row>
 
         <el-row>
@@ -45,8 +46,8 @@
     <el-col class="box2" :offset="1">
 
         <el-row>
-            <span style="float:left; background:linear-gradient(to bottom , white, grey); width:498px; 
-            height:50px; font-size:30px; text-align:left; text-indent:1em; margin-bottom:0px;">通知</span>
+            <span style="float:left; background:#909399; width:498px; 
+            height:50px; font-size:28px; color:white; text-align:left; text-indent:1em; margin-bottom:0px;">通知</span>
         </el-row>
 
         <vxe-list height="250" class="my-list" :data="notificationList">
@@ -159,29 +160,31 @@ export default {
         const studentIdList = this.$store.state.students.map(item => item.studentId)
         let index = studentIdList.indexOf(this.$store.state.currentStudentId)
 
-        this.regCount = this.$store.state.students[index].regId.split(" ").length - 1
+        this.regCount = this.$store.state.students[index].regId.length
     },
 
     findFailedCount(){
         this.failedCount =0
+        let count =0
         let resultList = this.$store.state.resultList
         const studentIdList = this.$store.state.students.map(item => item.studentId)
         let index = studentIdList.indexOf(this.$store.state.currentStudentId)
 
         let studentId = this.$store.state.currentStudentId
-        let regIdArray = this.$store.state.students[0].regId.split(" ")
-        regIdArray.pop()
+        let regIdArray = this.$store.state.students[0].regId
 
         let primaryKeyList = regIdArray.map(item => `${studentId}`+item)
         
         
         primaryKeyList.forEach(function(element){
-        for(let item of resultList)
-            if(item.primaryKey==element && item.courseResult<60){
-                this.failedCount ++ 
+            for(let item of resultList){
+                console.log(item.courseResult)
+                if(item.primaryKey==element && item.courseResult!= '' && item.courseResult<60 ){
+                    count ++ 
+                }
             }
         })
-
+        this.failedCount = count
     },
       
     toPoint(score) {

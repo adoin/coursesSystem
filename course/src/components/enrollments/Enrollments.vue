@@ -231,6 +231,7 @@ export default {
         this.queryList = this.courses;
       }
     },
+
     checkCourseId() {
       for (let item of this.queryList) {
         if (item.courseId.indexOf(this.searchItem) != -1) {
