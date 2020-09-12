@@ -96,15 +96,11 @@
 
 <script>
 import topbar from "../Topbar.vue";
+import { mapState } from "vuex"; 
 
 export default {
   data() {
     return {
-        notificationList:[{label:''},{label:''},{label:''},{label:''},{label:''}],
-        notificationForm:{
-            index:0,
-            label:''
-        },
         institution:'',
         GPA:0,
         regCount:0,
@@ -210,6 +206,12 @@ export default {
       this.findRegCount()
       this.findFailedCount()
   },
+
+  computed:{
+      ...mapState(["notificationList"]),
+      ...mapState(["notificationForm"])
+  },
+
   components: {
     topbar
   }

@@ -158,9 +158,7 @@ export default {
       for (let i = 0; i < this.$store.state.students.length - 1; i++) {
         //用studentId这个主键找对象
         if (this.$store.state.students[i].studentId == this.$store.state.currentStudentId) {
-          console.log(this.$store.state.students[i]);
-          let regIdStr = this.$store.state.students[i].regId;
-          let regIdArr = regIdStr.split(" "); //String 转 array
+          let regIdArr = this.$store.state.students[i].regId;
           let courseResult = "";
 
           //遍历这个array
@@ -212,7 +210,7 @@ export default {
         return true;
       }
 
-      if (this.$store.state.students[index].regId.search(id) != -1) {
+      if (this.$store.state.students[index].regId.indexOf(id) != -1) {
         //找到有重复的
         return false;
       } else {

@@ -6,8 +6,8 @@ import Enrollments from "@/components/enrollments/Enrollments"
 import Selected from "@/components/enrollments/selected"
 import PasswordManager from "@/components/enrollments/PasswordManager"
 import Results from "@/components/results/Results"
-import ScoreList from "@/components/scoreList/ScoreList"
 import HomePage from "@/components/homepage/HomePage"
+import Notification from "@/components/notification/Notification"
 Vue.use(Router)
 
 export default new Router({
@@ -43,14 +43,14 @@ export default new Router({
       component:Results
     },
     {
-      path:"/scoreList",
-      name:"scoreList",
-      component:ScoreList
-    },
-    {
       path:"/homePage",
       name:"homePage",
       component:HomePage
-    }
+    },
+    {
+      path:"/notification",
+      name:"notification",
+      component:Notification
+    },
   ]
 })

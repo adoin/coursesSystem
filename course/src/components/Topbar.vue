@@ -49,9 +49,9 @@
             <span slot="title">成绩管理</span>
           </el-menu-item>
 
-          <el-menu-item index="/enrollments" v-show="this.$store.state.adminType">
+          <el-menu-item index="/notification" v-show="this.$store.state.adminType">
             <i class="el-icon-s-platform"></i>
-            <span slot="title">账号管理</span>
+            <span slot="title">通知管理</span>
           </el-menu-item>
 
           <el-menu-item @click="logOut('admin')" v-show="this.$store.state.adminType">

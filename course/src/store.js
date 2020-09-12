@@ -15,6 +15,11 @@ export default new Vuex.Store({
         currentStudentPassword:'',
         currentRegId:'',
         currentRegCourse:'',
+        notificationList:[{label:''},{label:''},{label:''},{label:''},{label:''}],
+        notificationForm:{
+            index:0,
+            label:''
+        },
         students: [],
         courses: [],
         results:[],
